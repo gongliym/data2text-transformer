@@ -90,7 +90,7 @@ python $MODELPATH/train.py
 Use the following commands to generate from the above models:
 
 ```
-MODEL_PATH=
+MODEL_PATH=experiments/baseline/try1/best-valid_mt_bleu.pth
 INPUT_TABLE=rotowire/valid.gtable
 OUTPUT_SUMMARY=rotowire/valid.gtable_out
 
