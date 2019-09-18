@@ -50,35 +50,37 @@ And we finally get the training data:
 MODELPATH=$PWD/model
 export PYTHONPATH=$MODELPATH:$PYTHONPATH
 
-python $MODELPATH/train.py \
-    --model_path "experiments" \
-    --exp_name "baseline" \
-    --exp_id "try1" \
-    
-    ## data location / training objective
-    --train_cs_table_path rotowire/train.gtable.pth        # record data for content selection (CS) training
-    --train_sm_table_path rotowire/train.gtable.pth        # record data for data2text summarization (SM) training
-    --train_sm_summary_path rotowire/train.summary.pth     # summary data for data2text summarization (SM) training
-    --valid_table_path rotowire/valid.gtable.pth           # input record data for validation
-    --valid_summary_path rotowire/valid.summary.pth        # output summary data for validation
-    --cs_step True                                         # enable content selection training objective
-    --lambda_cs "1"                                        # CS training coefficient
-    --sm_step True                                         # enable summarization objective
-    --lambda_sm "1"                                        # SM training coefficient
-    
-    ## transformer parameters
-    --label_smoothing 0.05                                 # label smoothing
-    --share_inout_emb True                                 # share the embedding and softmax weights in decoder
-    --emb_dim 512                                          # embedding size
-    --enc_n_layers 1                                       # number of encoder layers
-    --dec_n_layers 6                                       # number of decoder layers
-    --dropout 0.1                                          # dropout
+python $MODELPATH/train.py
 
-    ## optimization
-    --save_periodic 1                                      # save model every N epoches
-    --batch_size 6                                         # batch size (number of examples)
-    --beam_size 4                                          # beam search in generation
-    --epoch_size 1000                                      # number of examples per epoch
-    --eval_bleu True                                       # evaluate the BLEU score
-    --validation_metrics valid_mt_bleu                     # validation metrics
+## main parameters
+--model_path "experiments"
+--exp_name "baseline"
+--exp_id "try1"
+
+## data location / training objective
+--train_cs_table_path rotowire/train.gtable.pth        # record data for content selection (CS) training
+--train_sm_table_path rotowire/train.gtable.pth        # record data for data2text summarization (SM) training
+--train_sm_summary_path rotowire/train.summary.pth     # summary data for data2text summarization (SM) training
+--valid_table_path rotowire/valid.gtable.pth           # input record data for validation
+--valid_summary_path rotowire/valid.summary.pth        # output summary data for validation
+--cs_step True                                         # enable content selection training objective
+--lambda_cs "1"                                        # CS training coefficient
+--sm_step True                                         # enable summarization objective
+--lambda_sm "1"                                        # SM training coefficient
+    
+## transformer parameters
+--label_smoothing 0.05                                 # label smoothing
+--share_inout_emb True                                 # share the embedding and softmax weights in decoder
+--emb_dim 512                                          # embedding size
+--enc_n_layers 1                                       # number of encoder layers
+--dec_n_layers 6                                       # number of decoder layers
+--dropout 0.1                                          # dropout
+
+## optimization
+--save_periodic 1                                      # save model every N epoches
+--batch_size 6                                         # batch size (number of examples)
+--beam_size 4                                          # beam search in generation
+--epoch_size 1000                                      # number of examples per epoch
+--eval_bleu True                                       # evaluate the BLEU score
+--validation_metrics valid_mt_bleu                     # validation metrics
 ```
