@@ -1,5 +1,5 @@
 # data2text-transformer
-Code for Enhanced Transformer Model for Data-to-Text Generation (Gong, Crego, Senellart; WNGT2019).
+Code for **Enhanced Transformer Model for Data-to-Text Generation** (Gong, Crego, Senellart; WNGT2019).
 Much of this code is adapted from an earlier fork of [XLM](https://github.com/facebookresearch/XLM).
 
 ## Dataset and Preprocessing
@@ -17,7 +17,7 @@ python scripts/data_extract.py -d rotowire/train.json -o rotowire/train
 In this step, we:
 
 * Convert the tables into a sequence of records: `train.gtable`
-* Extract the summary and transform entity tokens (such as **Kobe Bryant** -> **Kobe_Bryant**): `train.summary`
+* Extract the summary and transform entity tokens (e.g., **Kobe Bryant** -> **Kobe_Bryant**): `train.summary`
 * Mark the occurrances of records in the summary: `train.gtable_label` and `train.summary_label`
 
 ### Step2: Extract vocabulary
@@ -83,4 +83,23 @@ python $MODELPATH/train.py
 --epoch_size 1000                                      # number of examples per epoch
 --eval_bleu True                                       # evaluate the BLEU score
 --validation_metrics valid_mt_bleu                     # validation metrics
+```
+
+## Generation
+
+Use the following commands to generate from the above models:
+
+```
+python model/summarize.py 
+    --model_path $MODEL_PATH
+    --table_path rotowire/valid.gtable 
+    --output_path rotowire/valid.gtable_out 
+    --beam_size 4
+```
+
+### Postprocessing after generation
+In the preprocessing step1 (data extraction), the entity tokens are transformed (e.g., **Kobe Bryant** -> **Kobe_Bryant**). Here we revert such transformation:
+
+```
+cat rotowire/valid.gtable_out | sed 's/_/ /g' > rotowire/valid.gtable_out_summary
 ```
