@@ -90,10 +90,14 @@ python $MODELPATH/train.py
 Use the following commands to generate from the above models:
 
 ```
+MODEL_PATH=
+INPUT_TABLE=rotowire/valid.gtable
+OUTPUT_SUMMARY=rotowire/valid.gtable_out
+
 python model/summarize.py 
     --model_path $MODEL_PATH
-    --table_path rotowire/valid.gtable 
-    --output_path rotowire/valid.gtable_out 
+    --table_path $INPUT_TABLE
+    --output_path $OUTPUT_SUMMARY
     --beam_size 4
 ```
 
@@ -101,5 +105,51 @@ python model/summarize.py
 In the preprocessing step1 (data extraction), the entity tokens are transformed (e.g., **Kobe Bryant** -> **Kobe_Bryant**). Here we revert such transformation:
 
 ```
-cat rotowire/valid.gtable_out | sed 's/_/ /g' > rotowire/valid.gtable_out_summary
+cat ${OUTPUT_SUMMARY} | sed 's/_/ /g' > ${OUTPUT_SUMMARY}_txt
+```
+
+## Evaluation
+
+### Content-oriented evaluation
+
+We use the code in [https://github.com/ratishsp/data2text-1](https://github.com/ratishsp/data2text-1) for evaluation.
+
+Metrics of RG, CS, CO are computed using the below commands.
+
+#### Prepare dataset for the IE system
+```
+~/anaconda2/bin/python data_utils.py 
+    -mode make_ie_data                      # mode
+    -input_path "../rotowire"               # rotowire data path
+    -output_fi "roto-ie.h5"                 # output filename
+```
+#### Generate h5 file for summary
+```
+~/anaconda2/bin/python data_utils.py 
+    -mode prep_gen_data                     # mode 
+    -gen_fi ${OUTPUT_SUMMARY}_txt           # generated summary (postprocessed) 
+    -dict_pfx "roto-ie"                     # dict prefix of IE system
+    -output_fi ${OUTPUT_SUMMARY}_txt.h5     # output h5 filename
+    -input_path ../rotowire                 # rotowire data path
+```
+
+#### Evaluate RG metrics
+```
+th extractor.lua 
+    -gpuid 1 
+    -datafile roto-ie.h5                    # dataset of IE system
+    -preddata ${eval_output}_txt.h5         # generated h5 file in the previous step
+    -dict_pfx roto-ie                       # dict prefix of IE system
+    -just_eval
+```
+#### Evaluate CS and CO metrics
+```
+~/anaconda2/bin/python non_rg_metrics.py roto-gold-val.h5-tuples.txt ${eval_output}_txt.h5-tuples.txt
+```
+
+### BLEU evaluation
+
+The BLEU evaluation script can be obtained from [Moses](https://github.com/moses-smt/mosesdecoder/blob/master/scripts/generic/multi-bleu.perl):
+```
+perl multi-bleu.perl ${reference_summary} < ${generated_summary}
 ```
