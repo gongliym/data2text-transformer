@@ -123,7 +123,7 @@ Metrics of RG, CS, CO are computed using the below commands.
     -input_path "../rotowire"               # rotowire data path
     -output_fi "roto-ie.h5"                 # output filename
 ```
-#### Generate h5 file for summary
+#### Generate h5 file for output summary
 ```
 ~/anaconda2/bin/python data_utils.py 
     -mode prep_gen_data                     # mode 
@@ -138,13 +138,13 @@ Metrics of RG, CS, CO are computed using the below commands.
 th extractor.lua 
     -gpuid 1 
     -datafile roto-ie.h5                    # dataset of IE system
-    -preddata ${eval_output}_txt.h5         # generated h5 file in the previous step
+    -preddata ${OUTPUT_SUMMARY}_txt.h5         # generated h5 file in the previous step
     -dict_pfx roto-ie                       # dict prefix of IE system
     -just_eval
 ```
 #### Evaluate CS and CO metrics
 ```
-~/anaconda2/bin/python non_rg_metrics.py roto-gold-val.h5-tuples.txt ${eval_output}_txt.h5-tuples.txt
+~/anaconda2/bin/python non_rg_metrics.py roto-gold-val.h5-tuples.txt ${OUTPUT_SUMMARY}_txt.h5-tuples.txt
 ```
 
 ### BLEU evaluation
