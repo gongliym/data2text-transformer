@@ -89,6 +89,8 @@ python $MODELPATH/train.py
 
 Use the following commands to generate from the above models:
 
+Download the baseline model from: [link](https://drive.google.com/open?id=1o4kx0xJPbYser2RmpTHa-3aDlBl_M_uu)
+
 ```
 MODEL_PATH=experiments/baseline/try1/best-valid_mt_bleu.pth
 INPUT_TABLE=rotowire/valid.gtable
