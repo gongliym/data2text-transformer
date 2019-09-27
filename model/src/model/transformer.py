@@ -42,22 +42,21 @@ def smoothed_softmax_cross_entropy_with_logits(logits, labels, smoothing=0.0):
     if not smoothing:
         loss = F.cross_entropy(logits, labels, reduction='mean')
         return loss
-    
+
     vocab_size = logits.size(1)
     n = (vocab_size - 1)
     p = 1.0 - smoothing
     q = smoothing / n
-    
-    soft_targets = torch.zeros_like(logits).scatter(1, labels.view(-1, 1), 1)    
-    soft_targets = soft_targets * p + (1 - soft_targets) * q
+
+    one_hot = torch.randn(1, vocab_size, device=logits.device)
+    one_hot.fill_(q)
+    soft_targets = one_hot.repeat(labels.view(-1, 1).size(0), 1)
+    soft_targets.scatter_(1, labels.view(-1, 1), p)
+
     log_prb = F.log_softmax(logits, dim=1)
-    loss = -(soft_targets * log_prb).sum(dim=1) 
+    loss = -(soft_targets * log_prb).sum(dim=1)
     loss = loss.sum() / len(labels)
     return loss
-
-
-
-
 
 def Embedding(num_embeddings, embedding_dim, padding_idx=None):
     m = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
