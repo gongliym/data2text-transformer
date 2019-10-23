@@ -1,5 +1,5 @@
 # data2text-transformer
-Code for **Enhanced Transformer Model for Data-to-Text Generation**[\[PDF\]](https://github.com/gongliym/data2text-transformer/blob/master/wngt2019.pdf) (Gong, Crego, Senellart; WNGT2019).
+Code for **Enhanced Transformer Model for Data-to-Text Generation** [\[PDF\]](https://github.com/gongliym/data2text-transformer/blob/master/wngt2019.pdf) (Gong, Crego, Senellart; WNGT2019).
 Much of this code is adapted from an earlier fork of [XLM](https://github.com/facebookresearch/XLM).
 
 ## Dataset and Preprocessing
